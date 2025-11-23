@@ -10,9 +10,7 @@ import {
 import * as Location from "expo-location";
 import { styles } from "../styles/styles";
 
-export default function LocationSearch({
-  onSearch,
-}) {
+export default function LocationSearch({ onSearch }) {
   const [address, setAddress] = useState("");
   const [keyboardHeight] = useState(new Animated.Value(0));
   const [inputFocused, setInputFocused] = useState(false);
@@ -71,12 +69,14 @@ export default function LocationSearch({
 
   return (
     <Animated.View
-      style={{
-        flexDirection: "row",
-        alignItems: "center",
-        padding: 5,
-        marginBottom: keyboardHeight,
-      }}
+      style={[
+        {
+          flexDirection: "row",
+          alignItems: "center",
+          padding: 5,
+        },
+        { marginBottom: keyboardHeight },
+      ]}
     >
       <TextInput
         style={[styles.textInput, { flex: 3, marginRight: 5 }]}

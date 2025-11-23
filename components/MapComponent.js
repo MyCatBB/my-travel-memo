@@ -11,8 +11,9 @@ export default function MapComponent({
   currentLocation,
   initialLocation,
   loadingLocation,
-  mapRef, 
+  mapRef,
   searchedMarker,
+  favorites,
 }) {
   useEffect(() => {
     if (!searchedMarker || !mapRef?.current) return;
@@ -51,15 +52,38 @@ export default function MapComponent({
           />
         )}
 
-        {/* Search Marker */}
-        {searchedMarker && (
+        {/* Search Marker: Red */}
+        {searchedMarker &&
+          !favorites.some((fav) => fav.id === searchedMarker.id) && (
+            <Marker
+              key={`search-${searchedMarker.id}`}
+              coordinate={searchedMarker.coords}
+              pinColor="red"
+              onPress={() => onMarkerPress(searchedMarker)}
+              title={searchedMarker.title || ""}
+              description={searchedMarker.description || ""}
+            />
+          )}
+        {/* Favorite Marker: Yellow */}
+        {favorites.map((fav) => (
           <Marker
-            key={`search-${searchedMarker.id}`}
-            coordinate={searchedMarker.coords}
-            pinColor="red"
-            onPress={() => onMarkerPress(searchedMarker)}
+            key={fav.id}
+            coordinate={fav.coords}
+            pinColor="yellow"
+            title={fav.title || ""}
+            description={fav.description || ""}
+            onPress={() => onMarkerPress(fav)}
           />
-        )}
+        ))}
+        {/* default */}
+        {searchedMarker &&
+          !favorites.some((fav) => fav.id === searchedMarker.id) && (
+            <Marker
+              coordinate={searchedMarker.coords}
+              title={searchedMarker.title}
+              description={searchedMarker.description}
+            />
+          )}
       </MapView>
     </View>
   );

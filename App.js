@@ -85,8 +85,10 @@ export default function App() {
   return (
     <TouchableWithoutFeedback
       onPress={() => {
-        Keyboard.dismiss();
-        setFavoritesOpen(false);
+        if (!modalVisible) {
+          Keyboard.dismiss();
+          setFavoritesOpen(false);
+        }
       }}
       accessible={false}
     >
@@ -101,6 +103,7 @@ export default function App() {
             initialLocation={initialLocation}
             loadingLocation={loadingLocation}
             mapRef={mapRef}
+            favorites={favorites}
           />
           <Text style={styles.recenterButton} onPress={handleRecenter}>
             Re-center
@@ -121,22 +124,24 @@ export default function App() {
           </Text>
 
           {favoritesOpen && (
-<FavoritesList
-  favorites={favorites}
-  onSelect={(marker) => {
-    if (mapRef.current) {
-      mapRef.current.animateToRegion(
-        {
-          latitude: marker.coords.latitude,
-          longitude: marker.coords.longitude,
-          latitudeDelta: 0.01,
-          longitudeDelta: 0.01,
-        },
-        300
-      );
-    }
-  }}
-/>
+            <FavoritesList
+              favorites={favorites}
+              onSelect={(marker) => {
+                if (mapRef.current) {
+                  mapRef.current.animateToRegion(
+                    {
+                      latitude: marker.coords.latitude,
+                      longitude: marker.coords.longitude,
+                      latitudeDelta: 0.01,
+                      longitudeDelta: 0.01,
+                    },
+                    300,
+                  );
+                }
+                setSelectedMarker(marker);
+                setModalVisible(true);
+              }}
+            />
           )}
         </View>
 
@@ -148,8 +153,8 @@ export default function App() {
             onClose={() => setModalVisible(false)}
             onDelete={handleDeleteMarker}
             onSaveNote={handleSaveNote}
-            favorites={favorites} 
-            setFavorites={setFavorites} 
+            favorites={favorites}
+            setFavorites={setFavorites}
           />
         )}
 
@@ -176,7 +181,7 @@ export default function App() {
                 searchedMarker={searchedMarker}
                 favorites={favorites}
                 setFavorites={setFavorites}
-                style={style} 
+                style={style}
               />
             )}
           />

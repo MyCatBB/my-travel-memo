@@ -9,6 +9,8 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { styles } from "../styles/styles";
@@ -20,7 +22,7 @@ export default function MarkerModal({
   onClose,
   onDelete,
   onSaveNote,
-  favorites, 
+  favorites,
   setFavorites,
 }) {
   const [addNoteVisible, setAddNoteVisible] = useState(false);
@@ -51,22 +53,42 @@ export default function MarkerModal({
 
   return (
     <Modal visible={visible} animationType="slide" transparent={true}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={{
-          flex: 1,
-          justifyContent: "flex-start",
-          alignItems: "center",
-          paddingTop: 90,
+      <TouchableWithoutFeedback
+        onPress={() => {
+          Keyboard.dismiss();
+          onClose();
+          setAddNoteVisible(false);
         }}
       >
         <View
-          style={[styles.modal, { maxHeight: addNoteVisible ? "80%" : "auto" }]}
-        >
-          <Text style={styles.modalTitle}>Name: {marker?.title || ""}</Text>
-          <Text>Address: {marker?.description || ""}</Text>
+          style={{
+            flex: 1,
+            backgroundColor: "rgba(0,0,0,0.3)", 
+          }}
+        />
+      </TouchableWithoutFeedback>
 
-          {marker?.noteText ? <Text>Note: {marker.noteText}</Text> : null}
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{
+          position: "absolute",
+          top: 90,
+          left: 0,
+          right: 0,
+          alignItems: "center",
+        }}
+      >
+        <View
+          style={[
+            styles.modal,
+            { maxHeight: addNoteVisible ? "80%" : "auto", width: "100%" },
+          ]}
+        >
+          <Text style={styles.modalTitle}>
+            {"Name: " + (marker?.title || "")}
+          </Text>
+          <Text>{"Address: " + (marker?.description || "")}</Text>
+          {marker?.noteText ? <Text>{"Note: " + marker.noteText}</Text> : null}
           {marker?.noteImage && (
             <Image
               source={{ uri: marker.noteImage }}
@@ -92,9 +114,9 @@ export default function MarkerModal({
             </TouchableOpacity>
 
             <AddFavoriteButton
-              searchedMarker={marker} 
-              favorites={favorites} 
-              setFavorites={setFavorites} 
+              searchedMarker={marker}
+              favorites={favorites}
+              setFavorites={setFavorites}
               style={[styles.buttonStyle, { flex: 1.4, marginRight: 0.1 }]}
             />
 
@@ -108,8 +130,8 @@ export default function MarkerModal({
             <TouchableOpacity
               style={[styles.buttonStyle, { flex: 1.4, marginRight: 0.1 }]}
               onPress={() => {
-                setAddNoteVisible(false); 
-                onClose(); 
+                setAddNoteVisible(false);
+                onClose();
               }}
             >
               <Text style={styles.buttonTextStyle}>Close</Text>
@@ -124,7 +146,6 @@ export default function MarkerModal({
                 value={noteText}
                 onChangeText={setNoteText}
               />
-
               {imageUri && (
                 <Image
                   source={{ uri: imageUri }}
@@ -139,7 +160,6 @@ export default function MarkerModal({
                   marginTop: 10,
                 }}
               >
-                {/* Pick Image */}
                 <TouchableOpacity
                   style={[styles.buttonStyle, { flex: 1, marginRight: 5 }]}
                   onPress={pickImage}
@@ -147,7 +167,6 @@ export default function MarkerModal({
                   <Text style={styles.buttonTextStyle}>Pick Image</Text>
                 </TouchableOpacity>
 
-                {/* Save */}
                 <TouchableOpacity
                   style={[styles.buttonStyle, { flex: 1, marginHorizontal: 5 }]}
                   onPress={saveNote}
@@ -155,7 +174,6 @@ export default function MarkerModal({
                   <Text style={styles.buttonTextStyle}>Save</Text>
                 </TouchableOpacity>
 
-                {/* Cancel */}
                 <TouchableOpacity
                   style={[
                     styles.buttonStyle,

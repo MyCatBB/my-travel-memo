@@ -14,13 +14,14 @@ export default function AddFavoriteButton({
       return;
     }
 
-    // duplicate check: id 
+    // duplicate check by id
     const alreadyExists = favorites.some((fav) => fav.id === searchedMarker.id);
     if (alreadyExists) {
       Alert.alert("This place is already in favorites");
       return;
     }
 
+    // Add to favorites
     setFavorites([...favorites, searchedMarker]);
   };
 
@@ -29,11 +30,7 @@ export default function AddFavoriteButton({
       style={[style, !searchedMarker && { backgroundColor: "#aaa" }]}
       onPress={handleAddFavorite}
     >
-      <Text
-        style={styles.buttonTextStyle}
-      >
-        {searchedMarker?.title ? "Add Favorite" : "Add Favorite"}
-      </Text>
+      <Text style={styles.buttonTextStyle}>Add Favorite</Text>
     </TouchableOpacity>
   );
 }

@@ -47,7 +47,7 @@ export default function AddNote({ visible, onClose, onSave, style }) {
   return (
     <View style={[{ backgroundColor: "#fff", padding: 10 }, style]}>
       <Text style={{ fontWeight: "bold", fontSize: 16, marginBottom: 10 }}>
-        Add a Note{" "}
+        Add a Note
       </Text>
 
       <TextInput
